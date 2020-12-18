@@ -1,6 +1,6 @@
 $('document').ready(function () {
-  var preloader = $('.preloader'); //var instead of let for old browsers
-  var errorModal = $('#errorModal');
+  let preloader = $('.preloader');
+  let errorModal = $('#errorModal');
 
   preloader.fadeOut();
 
@@ -8,6 +8,8 @@ $('document').ready(function () {
     errorModal.modal('toggle');
   });
 
+  //set an event listener for keys if the error modal is show
+  //I don't like to implement this this way, improve it!
   errorModal.on('shown.bs.modal', function () {
     //if the modal is shown, I listen to any key to close it
     $(document.body).keypress(function () {
@@ -23,19 +25,18 @@ $('document').ready(function () {
 
     preloader.fadeIn();
 
-    var postData = {
+    let postData = {
       username: $('input[name ="username"]').val(),
       password: $('input[name ="password"]').val(),
     };
 
     $.ajax({
       type: 'POST',
-      url: 'http://localhost:3000/login',
+      url: '/login',
       data: JSON.stringify(postData),
       success: function (data, status) {
-        //var instead of let for old browsers
-        var params = new URLSearchParams(data.user).toString();
-        var url = `chat.html?room=general&token=${data.token}&${params}`;
+        let params = new URLSearchParams(data.user).toString();
+        let url = `chat.html?room=general&token=${data.token}&${params}`;
 
         //preloader.fadeOut();
 

@@ -1,9 +1,9 @@
-const createMessage = (username, img, msgcontent) => {
+const createMessage = (sender, receiver, content) => {
   return {
-    username,
-    img,
-    msgcontent,
-    date: new Date().getTime(),
+    sender,
+    receiver,
+    content,
+    timestamp: new Date().getTime(),
   };
 };
 

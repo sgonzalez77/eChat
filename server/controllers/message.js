@@ -19,30 +19,34 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
-app.get('/messages', verifyToken, (req, res) => {
-  // //optional parameters go inside req.query
+app.get('/messages/:receiver', verifyToken, (req, res) => {
+  //optional parameters go inside req.query
   // let from = Number(req.query.from) || 0;
   // let limit = Number(req.query.limit) || 5;
-  // let condition = {};
-  // let keys = 'username email img role enabled google'; //selected keys of the documents
-  // User.find(condition, keys)
-  //   .skip(from)
-  //   .limit(limit)
-  //   .exec((err, usersDB) => {
-  //     if (err) {
-  //       return res.status(500).json({
-  //         ok: false,
-  //         err,
-  //       });
-  //     }
-  //     User.countDocuments(condition, (err, numDocs) => {
-  //       res.json({
-  //         ok: true,
-  //         users: usersDB,
-  //         numDocs,
-  //       });
-  //     });
-  //   });
+  //loading all the messages, improvement: paged
+
+  let receiver = req.params.receiver;
+
+  let condition = { receiver };
+  let keys = 'sender receiver content timestamp'; //selected keys of the documents
+  Message.find(condition, keys)
+    // .skip(from)
+    // .limit(limit)
+    .exec((err, messagesDB) => {
+      if (err) {
+        return res.status(500).json({
+          ok: false,
+          err,
+        });
+      }
+      Message.countDocuments(condition, (err, numDocs) => {
+        res.json({
+          ok: true,
+          messages: messagesDB,
+          numDocs,
+        });
+      });
+    });
 });
 
 app.post('/message', verifyToken, function (req, res) {
@@ -50,8 +54,10 @@ app.post('/message', verifyToken, function (req, res) {
 
   let message = new Message({
     sender: body.sender,
+    receiver: body.receiver,
     room: body.room,
     content: body.content,
+    timestamp: body.timestamp,
   });
 
   message.save((err, messageDB) => {

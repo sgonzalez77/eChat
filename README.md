@@ -7,14 +7,16 @@ npm install
 node server/server
 ```
 
-TODOs
+TODOs (I wrote them down for me :s)
 
-- Messages stored in the DB
+- [x] Messages stored in the DB
 - Messages encrypted in the database
 - User may login only a single time simultaniously with the same account
 - Pop up for direct messages
+- Implement classes for users in the client
 - View for users CRUD
 - Enable Google login
 - Version using MariaDB
 - Version using React
 - Create chat rooms
+- Use socket.io only to notify clients to read a new message from the database, less performance but clearer code

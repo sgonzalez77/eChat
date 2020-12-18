@@ -9,13 +9,17 @@ let messageSchema = new Schema({
     type: String,
     required: [true, 'The id of the sender is required'],
   },
-  room: {
+  receiver: {
     type: String,
-    required: [true, 'The chat room is required'],
+    required: [true, 'A receiver (or chat room) is required'],
   },
   content: {
     type: String,
     required: [true, 'A content for the message is required'],
+  },
+  timestamp: {
+    type: Number, //Decimal128
+    required: [true, 'A message must have a timestamp'],
   },
 });
 

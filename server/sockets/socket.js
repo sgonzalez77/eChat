@@ -1,5 +1,6 @@
 const { io } = require('../server');
 const { Users } = require('../classes/users');
+
 const { createMessage } = require('../utils/utils');
 
 const users = new Users();
@@ -32,7 +33,6 @@ io.on('connection', (client) => {
       userConnected._id,
       userConnected.username,
       userConnected.email,
-      userConnected.__v,
       userConnected.img
     );
 
@@ -46,7 +46,7 @@ io.on('connection', (client) => {
         'createMessage',
         createMessage(
           'Administrator',
-          null,
+          userConnected.room,
           `${userConnected.username} joins the chat`
         )
       );
@@ -55,9 +55,11 @@ io.on('connection', (client) => {
   });
 
   client.on('createMessage', (data, callback) => {
+    //Sending the messages to all the clients
     let user = users.getUser(client.id);
 
-    let message = createMessage(user.username, user.img, data.msgcontent);
+    let message = createMessage(user._id, user.room, data.content);
+
     client.broadcast.to(user.room).emit('createMessage', message);
 
     callback(message);
@@ -72,7 +74,7 @@ io.on('connection', (client) => {
         'createMessage',
         createMessage(
           'Administrator',
-          null,
+          removedUser.room,
           `${removedUser.username} exits the chat`
         )
       );
