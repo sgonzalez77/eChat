@@ -3,18 +3,17 @@ class Users {
     this.users = [];
   }
 
-  addUser(id, room, token, role, enabled, google, _id, username, email, img) {
+  addUser(id, username, role, enabled, google, img, _id, room, token) {
     let user = {
       id,
-      room,
-      token,
+      username,
       role,
       enabled,
       google,
-      _id,
-      username,
-      email,
       img,
+      _id,
+      room,
+      token,
     };
 
     this.users.push(user);

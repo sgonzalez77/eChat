@@ -37,7 +37,7 @@ let verifyAdminRole = (req, res, next) => {
     return res.json({
       ok: false,
       err: {
-        message: 'The user must be an administrator',
+        message: 'The user must be an ',
       },
     });
   }
@@ -59,9 +59,9 @@ let verifyTokenURL = (req, res, next) => {
       });
     }
 
-    //remove this line?
-    req.usuario = decoded.usuario;
+    //req.user = decoded.user;
 
+    // console.log(req);
     next();
   });
 };

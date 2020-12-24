@@ -14,6 +14,9 @@ const saltRounds = 10;
 // User model
 const User = require('../models/user');
 
+//Maximum number of users
+const MAXUSERS = 100;
+
 // Importing middleware
 const {
   verifyToken,
@@ -34,7 +37,7 @@ app.use(bodyParser.json());
 app.get('/user', verifyToken, (req, res) => {
   //optional parameters go inside req.query
   let from = Number(req.query.from) || 0;
-  let limit = Number(req.query.limit) || 5;
+  let limit = Number(req.query.limit) || MAXUSERS;
 
   let condition = {};
   let keys = 'username email img role enabled google'; //selected keys of the documents

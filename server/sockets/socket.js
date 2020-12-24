@@ -24,16 +24,17 @@ io.on('connection', (client) => {
     client.join(userConnected.room);
 
     users.addUser(
-      client.id, //update id and token inside the database?
-      userConnected.room,
-      userConnected.token,
+      client.id, //keep id and token inside the database?
+      userConnected.username,
       userConnected.role,
       userConnected.enabled,
       userConnected.google,
+      userConnected.img,
       userConnected._id,
-      userConnected.username,
-      userConnected.email,
-      userConnected.img
+      userConnected.room,
+      userConnected.token
+      // userConnected.email,
+      // userConnected.password,
     );
 
     client.broadcast
@@ -45,7 +46,7 @@ io.on('connection', (client) => {
       .emit(
         'createMessage',
         createMessage(
-          'Administrator',
+          userConnected._id,
           userConnected.room,
           `${userConnected.username} joins the chat`
         )
@@ -73,7 +74,7 @@ io.on('connection', (client) => {
       .emit(
         'createMessage',
         createMessage(
-          'Administrator',
+          removedUser._id,
           removedUser.room,
           `${removedUser.username} exits the chat`
         )
