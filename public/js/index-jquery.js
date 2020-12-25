@@ -3,6 +3,9 @@ $('document').ready(function () {
   let errorModal = $('#error-modal');
   let errorHint = $('#error-hint');
 
+  // Sounds
+  var errorSound = $('#error-sound')[0];
+
   preloader.fadeOut();
 
   // click to modal to hide it
@@ -53,11 +56,13 @@ $('document').ready(function () {
         if (e.readyState === 0) {
           errorHint.html('<h4>Danger!</h4>Connection lost with the server');
           errorModal.modal('toggle');
+          errorSound.play();
         } else {
           resp = e.responseJSON;
           if (!resp.ok) {
             errorHint.html('<h4>Error!</h4>' + resp.err.message);
             errorModal.modal('toggle');
+            errorSound.play();
           }
         }
       },

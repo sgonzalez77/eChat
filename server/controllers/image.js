@@ -12,7 +12,6 @@ app.get('/image/:type/:img', verifyTokenURL, (req, res) => {
 
   let type = req.params.type;
   let img = req.params.img;
-  let pathImg = `./uploads/${type}/${img}`;
 
   let imagePath = path.resolve(__dirname, `../../uploads/${type}/${img}`);
 

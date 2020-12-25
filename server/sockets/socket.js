@@ -79,6 +79,7 @@ io.on('connection', (client) => {
           `${removedUser.username} exits the chat`
         )
       );
+
     client.broadcast
       .to(removedUser.room)
       .emit('userList', users.getUsersPerRoom(removedUser.room));

@@ -13,7 +13,8 @@ $('document').ready(function () {
   let txtSend = $('#txt-send');
   let divChatbox = $('#chat-box');
   let chatRoomName = $('#chat-room-name');
-  // modal to show errprs
+
+  // modal to show errors
   let errorModal = $('#error-modal');
   let errorHint = $('#error-hint');
 
@@ -22,6 +23,15 @@ $('document').ready(function () {
 
   // All users in the DB
   let allUsers = [];
+
+  // Sounds
+  let newMsgSend = $('#new-msg-send')[0];
+  let newMsgReceived = $('#new-msg-received')[0];
+  let newUser = $('#new-user')[0];
+  // let exitUser = $('#exit-user')[0];
+  let errorSound = $('#error-sound')[0];
+  let bye = $('#bye')[0];
+  let hiSound = $('#hi-sound')[0];
 
   //We could improve it using a single array of users
 
@@ -57,6 +67,8 @@ $('document').ready(function () {
   socket.on('connect', function () {
     console.log('Client connected to server');
 
+    hiSound.play();
+
     socket.emit('loginChat', currentUser, function (usersConnected) {
       chatRoomName.text(`'${currentUser.room}'`);
       //adding id (socket) to currentUser
@@ -78,13 +90,17 @@ $('document').ready(function () {
   // escuchar
   socket.on('disconnect', function () {
     console.log('The connection with the server was lost');
+    bye.play();
   });
 
   // Listen for new messages
   socket.on('createMessage', function (message) {
     // console.log('Servidor:', message);
     renderMessage(message, currentUser);
+
     scrollBottom();
+
+    newMsgReceived.play();
   });
 
   // Listen for new users
@@ -93,6 +109,7 @@ $('document').ready(function () {
     //improvement: we only need the new user connected, not all users...
     users = userArray;
     renderUsers(userArray);
+    newUser.play();
   });
 
   // Private message
@@ -283,6 +300,7 @@ $('document').ready(function () {
       error: function (e) {
         errorHint.html('<h4>Error!</h4>' + e.responseJSON.err.message);
         errorModal.modal('toggle');
+        errorSound.play();
       },
       dataType: 'json',
       contentType: 'application/json',
@@ -302,6 +320,7 @@ $('document').ready(function () {
       error: function (e) {
         errorHint.html('<h4>Error!</h4>' + e.responseJSON.err.message);
         errorModal.modal('toggle');
+        errorSound.play();
       },
       dataType: 'json',
       contentType: 'application/json',
@@ -366,11 +385,13 @@ $('document').ready(function () {
           txtSend.val('').focus();
           renderMessage(message, currentUser);
           scrollBottom();
+          newMsgSend.play();
         });
       },
       error: function (e) {
-        $('#errorHint').html('<h4>Error!</h4>' + e.responseJSON.err.message);
+        errorHint.html('<h4>Error!</h4>' + e.responseJSON.err.message);
         errorModal.modal('toggle');
+        errorSound.play();
       },
       dataType: 'json',
       contentType: 'application/json',
