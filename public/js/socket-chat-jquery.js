@@ -176,21 +176,28 @@ $('document').ready(function () {
     me
   ) {
     var txt = '';
-    txt += `<li class="${class1}">`;
-    if (!me)
+    if (me) {
+      txt += '<li class="reverse">';
+      txt += '  <div class="chat-content">';
+      txt += `    <h5>${time} – ${username}</h5>`;
       txt += `    <div class="chat-img"><img src="${img}" alt="user" /></div>`;
-    txt += '    <div class="chat-content">';
-    txt += `        <h5>${username}</h5>`;
-    txt += `        <div class="${class2}">${msgcontent}</div>`;
-    txt += '    </div>';
-    if (me)
+      txt += '    <div class="box bg-light-inverse">' + msgcontent + '</div>';
+      txt += '  </div>';
+
+      txt += '</li>';
+    } else {
+      txt += '<li>';
+      txt += '  <div class="chat-content">';
+      txt += `    <h5>${username} – ${time}</h5>`;
       txt += `    <div class="chat-img"><img src="${img}" alt="user" /></div>`;
-    txt += `    <div class="chat-time">${time}</div>`;
-    txt += '</li>';
+      txt += '    <div class="box bg-light-danger">' + msgcontent + '</div>';
+      txt += '  </div>';
+
+      txt += '</li>';
+    }
 
     return txt;
   }
-
   //renders a new message appending it to the current messages
   //(message generated from the view or coming from the DB)
 
@@ -213,8 +220,6 @@ $('document').ready(function () {
     let minutes = twoDigits(date.getMinutes());
     let time = `${hour}:${minutes}`;
 
-    let adminClass = 'info';
-
     if (message.sender === curUser._id) {
       //sender is current user
 
@@ -233,7 +238,7 @@ $('document').ready(function () {
         true
       );
     } else {
-      class1 = 'animated fadeIn';
+      //class1 = 'animated fadeIn';
       msgcontent = message.content;
 
       //sender is another user

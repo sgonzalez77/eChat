@@ -2564,11 +2564,13 @@ Buttons
   height: 40px;
   padding: 10px;
 }
-
+/*
+I changed: padding: 8px 10px;
+*/
 .btn-circle.btn-sm {
   width: 35px;
   height: 35px;
-  padding: 8px 10px;
+  padding: 2px 1px;
   font-size: 14px;
 }
 
@@ -6385,7 +6387,7 @@ File: scss
 .chat-list li .chat-content {
   width: calc(100% - 140px);
   display: inline-block;
-  padding-left: 15px;
+  padding: 0;
 }
 .chat-list li .chat-content h5 {
   color: #99abb4;
@@ -6397,7 +6399,6 @@ File: scss
 }
 .chat-list li .chat-time {
   display: inline-block;
-  text-align: right;
   width: 80px;
   font-size: 13px;
   color: #99abb4;
@@ -6415,9 +6416,9 @@ File: scss
 .chat-list li.reverse {
   text-align: right;
 }
-.chat-list li.reverse .chat-time {
+/* .chat-list li.reverse .chat-time {
   text-align: left;
-}
+} */
 .chat-list li.reverse .chat-content {
   padding-left: 0px;
   padding-right: 15px;
