@@ -6416,9 +6416,9 @@ File: scss
 .chat-list li.reverse {
   text-align: right;
 }
-/* .chat-list li.reverse .chat-time {
+.chat-list li.reverse .chat-time {
   text-align: left;
-} */
+}
 .chat-list li.reverse .chat-content {
   padding-left: 0px;
   padding-right: 15px;

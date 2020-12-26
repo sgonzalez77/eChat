@@ -64,6 +64,7 @@ $('document').ready(function () {
   // socket.io
   // ============================================
 
+  // connecting to the server for the first time
   socket.on('connect', function () {
     console.log('Client connected to server');
 
@@ -87,13 +88,13 @@ $('document').ready(function () {
     });
   });
 
-  // escuchar
+  // Disconnected from server
   socket.on('disconnect', function () {
     console.log('The connection with the server was lost');
     bye.play();
   });
 
-  // Listen for new messages
+  // Listening for new messages
   socket.on('createMessage', function (message) {
     // console.log('Servidor:', message);
     renderMessage(message, currentUser);
@@ -103,7 +104,7 @@ $('document').ready(function () {
     newMsgReceived.play();
   });
 
-  // Listen for new users
+  // Listening for new users
   socket.on('userList', function (userArray) {
     //I keep users in a global variable
     //improvement: we only need the new user connected, not all users...
@@ -112,15 +113,17 @@ $('document').ready(function () {
     newUser.play();
   });
 
-  // Private message
-  // socket.on('privateMessage', function (message) {
-  //   console.log('Private missage:', message);
-  // });
+  // Private message received
+  socket.on('privateMessage', function (message) {
+    console.log('Private message:', message);
+    newMsgReceived.play(); //another sound for private messages???
+  });
 
   // ============================================
   // Utils
   // ============================================
 
+  // Format number to, at least, two digits
   function twoDigits(txt) {
     if (txt.toString().length === 1) {
       txt = '0' + txt;
@@ -133,7 +136,6 @@ $('document').ready(function () {
   // ============================================
 
   // Render connected users
-
   function renderUsers(users) {
     // [{},{},{}]
     let html = '';
@@ -166,6 +168,7 @@ $('document').ready(function () {
     divUsers.html(html);
   }
 
+  // Rendering a single message
   function htmlSingleMessage(
     class1,
     class2,
@@ -198,13 +201,13 @@ $('document').ready(function () {
 
     return txt;
   }
-  //renders a new message appending it to the current messages
-  //(message generated from the view or coming from the DB)
 
+  // ir renders a new message appending it to the current messages
+  // (message generated from the view or coming from the DB)
   function renderMessage(message, curUser) {
-    //message: {sender, receiver, room, content, timestamp}
-    //curUser: {room, token, role, enabled, google, _id, username, email, img}
-    //implement using DOM?
+    // message: {sender, receiver, room, content, timestamp}
+    // curUser: {room, token, role, enabled, google, _id, username, email, img}
+    // implement using DOM?
 
     let html = '';
 
@@ -261,6 +264,7 @@ $('document').ready(function () {
 
     divChatbox.append(html);
   }
+
   //function to render messages stored in the DB
   //messages: array of messages
   function renderMessagesDB(messages) {
@@ -270,6 +274,7 @@ $('document').ready(function () {
     }
   }
 
+  // scroll to the last message
   function scrollBottom() {
     // selectors
     let newMessage = divChatbox.children('li:last-child');
@@ -311,6 +316,7 @@ $('document').ready(function () {
       contentType: 'application/json',
     });
   }
+
   // after getting the messages from the DB we call renderMessagesDB
   function loadMessages() {
     $.ajax({
@@ -331,6 +337,26 @@ $('document').ready(function () {
       contentType: 'application/json',
     });
   }
+
+  function createPrivChat(name, username) {
+    name = name.trim();
+    const popUpChat = document.createElement('div');
+    popUpChat.id = name;
+    popUpChat.className = 'cpmain-section';
+    const popUpTemplate = document.getElementById('popup-chat-template');
+    const popUpBody = document.importNode(popUpTemplate.content, true);
+    popUpBody.querySelector('.fa-minus').id = name + 'Min'; // minimize button
+    popUpBody.querySelector('.fa-times').id = name + 'Close'; // close button
+    popUpBody.querySelector('.fa-paper-plane-o').id = name + 'Send'; // send button
+
+    // I don't know why it does not work, I implement the same binding the input text
+    // popUpBody.querySelector('input').id = name + 'Txt';
+    console.log(popUpBody.querySelector('input').id);
+    popUpBody.querySelector('p').textContent = username;
+    popUpChat.append(popUpBody);
+    $('body').append(popUpChat);
+  }
+
   // ============================================
   // Event listeners
   // ============================================
@@ -355,10 +381,44 @@ $('document').ready(function () {
   // click on a user
   divUsers.on('click', 'a', function () {
     let id = $(this).data('id');
+    // We can not send private messages to ourselves
+    if (id === currentUser.id) return;
 
-    if (id) {
-      console.log(id);
-    }
+    //receiver data
+    let receiver = users.filter((user) => user.id === id)[0];
+
+    // cloning the template and rendering
+    createPrivChat('privChat1', receiver.username);
+
+    // event listener for minimize button
+    $('#privChat1Min').click(function () {
+      $('#privChat1').toggleClass('cpopen-more');
+    });
+
+    // event listener for close button
+    $('#privChat1Close').click(function () {
+      $('#privChat1').remove();
+    });
+    console.log('CLCIK', $('input')[0].value.trim());
+
+    $('#privChat1Send').bind(
+      'click',
+      {
+        txt: $('input')[2],
+      },
+      function (event) {
+        let message = {
+          sender: currentUser._id,
+          receiver: id,
+          content: event.data.txt.value.trim(),
+          timestamp: new Date().getTime(),
+        };
+
+        // event listener for close button
+        event.preventDefault();
+        socket.emit('privateMessage', message);
+      }
+    );
   });
 
   // click on send button

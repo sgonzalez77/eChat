@@ -1,77 +1,78 @@
-.main-section {
+.cpmain-section {
   width: 300px;
   position: fixed;
   right: 50px;
   bottom: -350px;
+  transition: 2s;
 }
-.first-section:hover {
+.cpfirst-section:hover {
   cursor: pointer;
 }
-.open-more {
+.cpopen-more {
   bottom: 0px;
   transition: 2s;
 }
-.border-chat {
+.cpborder-chat {
   border: 1px solid #82b6f4;
   margin: 0px;
 }
-.first-section {
+.cpfirst-section {
   background-color: #82b6f4;
 }
-.first-section p {
+.cpfirst-section p {
   color: #fff;
   margin: 0px;
   padding: 10px 0px;
 }
-.first-section p:hover {
+.cpfirst-section p:hover {
   color: #fff;
   cursor: pointer;
 }
-.right-first-section {
+.cpright-first-section {
   text-align: right;
 }
-.right-first-section i {
+.cpright-first-section i {
   color: #fff;
   font-size: 15px;
   padding: 12px 3px;
 }
-.right-first-section i:hover {
+.cpright-first-section i:hover {
   color: #fff;
 }
-.chat-section ul li {
+.cpchat-section ul li {
   list-style: none;
   margin-top: 10px;
   position: relative;
 }
-.chat-section {
+.cpchat-section {
   overflow-y: scroll;
   height: 300px;
 }
-.chat-section ul {
+.cpchat-section ul {
   padding: 0px;
 }
-.left-chat img,
-.right-chat img {
+.cpleft-chat img,
+.cpright-chat img {
   width: 50px;
   height: 50px;
   float: left;
   margin: 0px 10px;
 }
-.right-chat img {
+.cpright-chat img {
   float: right;
 }
-.second-section {
+.cpsecond-section {
   padding: 0px;
   margin: 0px;
   background-color: #f3f3f3;
   height: 300px;
 }
-.left-chat,
-.right-chat {
+.cpleft-chat,
+.cpright-chat {
   overflow: hidden;
 }
-.left-chat p,
-.right-chat p {
+.cpleft-chat p,
+.cpright-chat p {
   background-color: #fd8468;
   padding: 10px;
   color: #fff;
@@ -80,31 +81,34 @@
   width: 60%;
   margin-bottom: 20px;
 }
-.left-chat span,
-.right-chat span {
+.cpleft-chat span,
+.cpright-chat span {
   position: absolute;
   left: 70px;
   top: 60px;
   color: #b7bcc5;
 }
-.right-chat span {
+.cpright-chat span {
   left: 45px;
 }
-.right-chat p {
+.cpright-chat p {
   float: right;
   background-color: #ffffff;
   color: #fd8468;
 }
-.third-section {
+.cpthird-section {
   border-top: 1px solid #eeeeee;
 }
-.text-bar input {
+.cptext-bar {
+  background-color: #fff;
+}
+.cptext-bar input {
   width: 90%;
   margin-left: -15px;
   padding: 10px 10px;
   border: 1px solid #fff;
 }
-.text-bar a i {
+.cptext-bar a i {
   background-color: #3f8ef4;
   color: #fff;
   width: 30px;
@@ -113,7 +117,7 @@
   border-radius: 50%;
   text-align: center;
 }
-.left-chat:before {
+.cpleft-chat:before {
   content: ' ';
   position: absolute;
   top: 0px;
@@ -122,7 +126,7 @@
   border: 15px solid transparent;
   border-top-color: #fd8468;
 }
-.right-chat:before {
+.cpright-chat:before {
   content: ' ';
   position: absolute;
   top: 0px;

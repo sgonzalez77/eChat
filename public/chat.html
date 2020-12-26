@@ -148,25 +148,31 @@
     <!-- ============================================================== -->
     <!-- End Wrapper -->
     <!-- ============================================================== -->
-    <div class="main-section" id="popup-chat-1">
-      <div class="row border-chat">
-        <div class="col-md-12 col-sm-12 col-xs-12 first-section">
+    <!-- Private chat  window
+    Source: https://www.nicesnippets.com/snippet/bootstrap-chat-box-code-example -->
+    <template id="popup-chat-template">
+      <div class="row cpborder-chat">
+        <div class="col-md-12 col-sm-12 col-xs-12 cpfirst-section">
           <div class="row">
-            <div class="col-md-8 col-sm-6 col-xs-6 left-first-section">
-              <p id="popup-user">_Username_</p>
+            <div class="col-md-8 col-sm-6 col-xs-6 cpleft-first-section">
+              <p>_Username_</p>
             </div>
-            <div class="col-md-4 col-sm-6 col-xs-6 right-first-section">
-              <a href="#"><i class="fa fa-minus" aria-hidden="true"></i></a>
+            <div class="col-md-4 col-sm-6 col-xs-6 cpright-first-section">
+              <a href="#"
+                ><i class="fa fa-minus" aria-hidden="true" id=""></i
+              ></a>
               <!-- <a href="#"><i class="fa fa-clone" aria-hidden="true"></i></a> -->
-              <a href="#"><i class="fa fa-times" aria-hidden="true"></i></a>
+              <a href="#"
+                ><i class="fa fa-times" aria-hidden="true" id=""></i
+              ></a>
             </div>
           </div>
         </div>
       </div>
-      <div class="row border-chat">
-        <div class="col-md-12 col-sm-12 col-xs-12 second-section">
-          <div class="chat-section">
-            <ul class="chat-list p-0" id="chat-box-popup">
+      <div class="row cpborder-chat">
+        <div class="col-md-12 col-sm-12 col-xs-12 cpsecond-section">
+          <div class="cpchat-section">
+            <ul class="cpchat-list p-0" id="chat-box-popup">
               <!-- <li>
                 <div class="left-chat">
                   <img src="/demo/man01.png" />
@@ -227,19 +233,24 @@
           </div>
         </div>
       </div>
-      <div class="row border-chat">
-        <div class="col-md-12 col-sm-12 col-xs-12 third-section">
-          <div class="text-bar">
-            <input type="text" placeholder="Type your message here..." />
+      <div class="row cpborder-chat">
+        <div class="col-md-12 col-sm-12 col-xs-12 cpthird-section">
+          <div class="cptext-bar">
+            <input
+              type="text"
+              id=""
+              class="form-control b-0"
+              placeholder="Type your message here..."
+            />
             <a href="#">
               <button type="submit" class="btn btn-info btn-circle btn-sm">
-                <i class="fa fa-paper-plane-o"></i>
+                <i class="fa fa-paper-plane-o" id=""></i>
               </button>
             </a>
           </div>
         </div>
       </div>
-    </div>
+    </template>
     <div style="visibility: hidden">
       <audio id="new-msg-send" src="assets/sounds/agogohi.mp3"></audio>
       <audio id="new-msg-received" src="assets/sounds/agogolo.mp3"></audio>
