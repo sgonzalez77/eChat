@@ -1,7 +1,7 @@
 .cpmain-section {
   width: 300px;
   position: fixed;
-  right: 50px;
+  right: 90px;
   bottom: -350px;
   transition: 2s;
 }
@@ -41,20 +41,21 @@
 }
 .cpchat-section ul li {
   list-style: none;
-  margin-top: 10px;
-  position: relative;
+  margin-top: 5px;
 }
 .cpchat-section {
-  overflow-y: scroll;
   height: 300px;
+  position: relative;
+  overflow-y: scroll;
 }
 .cpchat-section ul {
   padding: 0px;
+  position: relative;
 }
 .cpleft-chat img,
 .cpright-chat img {
   width: 50px;
-  height: 50px;
+  height: 30px;
   float: left;
   margin: 0px 10px;
 }
@@ -71,30 +72,53 @@
 .cpright-chat {
   overflow: hidden;
 }
-.cpleft-chat p,
-.cpright-chat p {
-  background-color: #fd8468;
+.cpleft-chat p {
+  background-color: #3f8ef4;
   padding: 10px;
   color: #fff;
   border-radius: 5px;
   float: left;
-  width: 60%;
-  margin-bottom: 20px;
+  /* width: 60%; */
+  max-width: 225px;
+  margin: 3px 3px 0px 3px;
 }
-.cpleft-chat span,
-.cpright-chat span {
-  position: absolute;
-  left: 70px;
-  top: 60px;
+.cpright-chat p {
+  background-color: #3f8ef4;
+  padding: 10px;
+  color: #fff;
+  border-radius: 5px;
+  float: right;
+  /* width: 60%; */
+  max-width: 225px;
+  margin: 3px 3px 0px 3px;
+}
+.cpleft-chat span {
+  /* position: absolute; */
+  position: relative;
+  /* left: 70px;
+    top: 60px; */
+  top: 15px;
+  margin-left: 3px;
+  float: left;
   color: #b7bcc5;
 }
 .cpright-chat span {
-  left: 45px;
+  /* position: absolute; */
+  position: relative;
+  /* left: 70px;
+  top: 60px; */
+  top: 15px;
+  margin-right: 3px;
+  float: right;
+  color: #b7bcc5;
 }
+/* .cpright-chat span {
+  left: 45px;
+} */
 .cpright-chat p {
   float: right;
   background-color: #ffffff;
-  color: #fd8468;
+  color: #3f8ef4;
 }
 .cpthird-section {
   border-top: 1px solid #eeeeee;
@@ -117,14 +141,14 @@
   border-radius: 50%;
   text-align: center;
 }
-.cpleft-chat:before {
+/* .cpleft-chat:before {
   content: ' ';
   position: absolute;
   top: 0px;
   left: 55px;
   bottom: 150px;
   border: 15px solid transparent;
-  border-top-color: #fd8468;
+  border-top-color: #3f8ef4;
 }
 .cpright-chat:before {
   content: ' ';
@@ -134,4 +158,4 @@
   bottom: 150px;
   border: 15px solid transparent;
   border-top-color: #fff;
-}
+} */

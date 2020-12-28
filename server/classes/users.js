@@ -27,6 +27,12 @@ class Users {
     return user;
   }
 
+  getUserBy_id(_id) {
+    let user = this.users.filter((user) => user._id === _id)[0];
+
+    return user;
+  }
+
   getUsers() {
     return this.users;
   }

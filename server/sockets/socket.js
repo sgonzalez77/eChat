@@ -86,14 +86,14 @@ io.on('connection', (client) => {
   });
 
   // Private messages (between two users)
-  client.on('privateMessage', (data) => {
-    console.log('data', data);
-
+  client.on('privateMessage', (data, callback) => {
+    let receiver = users.getUserBy_id(data.receiver);
     client.broadcast
-      .to(data.receiver)
+      .to(receiver.id)
       .emit(
         'privateMessage',
         createMessage(data.sender, data.receiver, data.content)
       );
+    callback(data);
   });
 });

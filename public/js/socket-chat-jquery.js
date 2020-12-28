@@ -24,6 +24,9 @@ $('document').ready(function () {
   // All users in the DB
   let allUsers = [];
 
+  // referencies to the popup chats
+  let popupChats = [];
+
   // Sounds
   let newMsgSend = $('#new-msg-send')[0];
   let newMsgReceived = $('#new-msg-received')[0];
@@ -59,6 +62,8 @@ $('document').ready(function () {
     email: params.get('email'),
     img: params.get('img'),
   };
+
+  console.log(currentUser);
 
   // ============================================
   // socket.io
@@ -99,7 +104,7 @@ $('document').ready(function () {
     // console.log('Servidor:', message);
     renderMessage(message, currentUser);
 
-    scrollBottom();
+    scrollBottom(divChatbox);
 
     newMsgReceived.play();
   });
@@ -115,8 +120,37 @@ $('document').ready(function () {
 
   // Private message received
   socket.on('privateMessage', function (message) {
-    console.log('Private message:', message);
     newMsgReceived.play(); //another sound for private messages???
+
+    // render new private message
+
+    //sender data
+    let sender = users.filter((user) => user._id === message.sender)[0];
+
+    // cloning the template and rendering
+    // we keep references to all private chats opened into popupChats
+
+    if (!popupChats.filter((chat) => chat._id === message.sender)[0]) {
+      // chats exists?
+      popupChats.push({
+        _id: message.sender,
+        chatDiv: $(`#${message.sender}UL`),
+      });
+      createPrivChat(message.sender, sender.username);
+
+      // event listeners for private chat
+      setPrivChatEvListeners(message.sender);
+    }
+
+    renderPrivateMessage(
+      $(`#${message.sender}UL`),
+      message.sender,
+      'cpleft-chat',
+      message.content,
+      message.timestamp
+    );
+
+    scrollBottom2($(`#${message.sender}UL`));
   });
 
   // ============================================
@@ -134,6 +168,24 @@ $('document').ready(function () {
   // ============================================
   // Render
   // ============================================
+
+  // rendering private messages
+  function renderPrivateMessage(el, _id, myclass, text, timestamp) {
+    let date = new Date(Number(timestamp));
+    let hour = twoDigits(date.getHours());
+    let minutes = twoDigits(date.getMinutes());
+    let time = `${hour}:${minutes}`;
+    let html = '';
+
+    html += '<li>';
+    html += `<div class="${myclass}">`;
+    html += `  <p>${text}</p>`;
+    html += `  <span>${time}</span>`;
+    html += '</div>';
+    html += '</li>';
+
+    el.append(html);
+  }
 
   // Render connected users
   function renderUsers(users) {
@@ -157,8 +209,8 @@ $('document').ready(function () {
       img = `/image/user/${users[i].img}?token=${users[i].token}`;
       // }
       html +=
-        '    <a data-id="' +
-        users[i].id +
+        '    <a data-_id="' +
+        users[i]._id +
         `"  href="javascript:void(0)"><img src="${img}" alt="user-img" class="img-circle"> <span>` +
         users[i].username +
         ' <small class="text-success">online</small></span></a>';
@@ -270,27 +322,68 @@ $('document').ready(function () {
   function renderMessagesDB(messages) {
     for (const msg of messages) {
       renderMessage(msg, currentUser);
-      scrollBottom();
+      scrollBottom(divChatbox);
     }
   }
 
   // scroll to the last message
-  function scrollBottom() {
+  function scrollBottom(el) {
     // selectors
-    let newMessage = divChatbox.children('li:last-child');
+    let newMessage = el.children('li:last-child');
 
     // heights
-    let clientHeight = divChatbox.prop('clientHeight');
-    let scrollTop = divChatbox.prop('scrollTop');
-    let scrollHeight = divChatbox.prop('scrollHeight');
+    let clientHeight = el.prop('clientHeight');
+    let scrollTop = el.prop('scrollTop');
+    let scrollHeight = el.prop('scrollHeight');
     let newMessageHeight = newMessage.innerHeight();
     let lastMessageHeight = newMessage.prev().innerHeight() || 0;
-
+    console.log(
+      clientHeight,
+      scrollTop,
+      newMessageHeight,
+      lastMessageHeight,
+      scrollHeight
+    );
     if (
       clientHeight + scrollTop + newMessageHeight + lastMessageHeight >=
       scrollHeight
     ) {
-      divChatbox.scrollTop(scrollHeight);
+      console.log(
+        el.prop('nodeName'),
+        el.parent().prop('nodeName'),
+        el.children('li:first-child').prop('nodeName')
+      );
+      el.scrollTop(scrollHeight);
+    }
+  }
+
+  // I don't know why with private messages with a similar structure
+  // I need to run el.parent().scrollTop(scrollHeight); instead of
+  // el.scrollTop(scrollHeight);
+  // the structure is DIV-UL-LI in botx cases!!
+  // I'll fix it when I have time
+  function scrollBottom2(el) {
+    // selectors
+    let newMessage = el.children('li:last-child');
+
+    // heights
+    let clientHeight = el.prop('clientHeight');
+    let scrollTop = el.prop('scrollTop');
+    let scrollHeight = el.prop('scrollHeight');
+    let newMessageHeight = newMessage.innerHeight();
+    let lastMessageHeight = newMessage.prev().innerHeight() || 0;
+    console.log(
+      clientHeight,
+      scrollTop,
+      newMessageHeight,
+      lastMessageHeight,
+      scrollHeight
+    );
+    if (
+      clientHeight + scrollTop + newMessageHeight + lastMessageHeight >=
+      scrollHeight
+    ) {
+      el.parent().scrollTop(scrollHeight);
     }
   }
 
@@ -338,23 +431,22 @@ $('document').ready(function () {
     });
   }
 
-  function createPrivChat(name, username) {
-    name = name.trim();
+  function createPrivChat(_id, username) {
+    //pure JS
     const popUpChat = document.createElement('div');
-    popUpChat.id = name;
+    popUpChat.id = _id;
     popUpChat.className = 'cpmain-section';
     const popUpTemplate = document.getElementById('popup-chat-template');
     const popUpBody = document.importNode(popUpTemplate.content, true);
-    popUpBody.querySelector('.fa-minus').id = name + 'Min'; // minimize button
-    popUpBody.querySelector('.fa-times').id = name + 'Close'; // close button
-    popUpBody.querySelector('.fa-paper-plane-o').id = name + 'Send'; // send button
-
-    // I don't know why it does not work, I implement the same binding the input text
-    // popUpBody.querySelector('input').id = name + 'Txt';
-    console.log(popUpBody.querySelector('input').id);
-    popUpBody.querySelector('p').textContent = username;
+    popUpBody.querySelector('.fa-minus').id = _id + 'Min'; // minimize button
+    popUpBody.querySelector('.fa-times').id = _id + 'Close'; // close button
+    popUpBody.querySelector('.fa-paper-plane-o').id = _id + 'Send'; // send button
+    popUpBody.querySelector('input').id = _id + 'Txt'; // input text
+    popUpBody.querySelector('.cpchat-section').id = _id + 'Div'; // DIV containing the list with the messages
+    popUpBody.querySelector('ul').id = _id + 'UL'; // list with the messages
+    popUpBody.querySelector('p').textContent = username; // private chat title
     popUpChat.append(popUpBody);
-    $('body').append(popUpChat);
+    document.body.append(popUpChat);
   }
 
   // ============================================
@@ -378,47 +470,101 @@ $('document').ready(function () {
     });
   });
 
-  // click on a user
-  divUsers.on('click', 'a', function () {
-    let id = $(this).data('id');
-    // We can not send private messages to ourselves
-    if (id === currentUser.id) return;
-
-    //receiver data
-    let receiver = users.filter((user) => user.id === id)[0];
-
-    // cloning the template and rendering
-    createPrivChat('privChat1', receiver.username);
-
+  function setPrivChatEvListeners(_id) {
     // event listener for minimize button
-    $('#privChat1Min').click(function () {
-      $('#privChat1').toggleClass('cpopen-more');
+    $(`#${_id}Min`).click(function () {
+      $(`#${_id}`).toggleClass('cpopen-more');
     });
 
     // event listener for close button
-    $('#privChat1Close').click(function () {
-      $('#privChat1').remove();
+    $(`#${_id}Close`).click(function () {
+      $(`#${_id}`).remove();
+      popupChats = popupChats.filter((chat) => chat._id !== _id);
     });
-    console.log('CLCIK', $('input')[0].value.trim());
 
-    $('#privChat1Send').bind(
+    $(`#${_id}Send`).bind(
       'click',
       {
-        txt: $('input')[2],
+        txt: $(`#${_id}Txt`),
       },
       function (event) {
+        if (event.data.txt.val().trim().length === 0) {
+          return;
+        }
+
         let message = {
           sender: currentUser._id,
-          receiver: id,
-          content: event.data.txt.value.trim(),
+          receiver: _id,
+          content: event.data.txt.val().trim(),
           timestamp: new Date().getTime(),
         };
-
-        // event listener for close button
+        // event listener for send button
         event.preventDefault();
-        socket.emit('privateMessage', message);
+        socket.emit('privateMessage', message, function (data) {
+          renderPrivateMessage(
+            $(`#${data.receiver}UL`),
+            data.receiver,
+            'cpright-chat',
+            data.content,
+            data.timestamp
+          );
+
+          scrollBottom2($(`#${data.receiver}UL`));
+          event.data.txt.val('').focus();
+        });
       }
     );
+
+    // pressing enter on the input text of a private chat
+    $(`#${_id}Txt`).on('keypress', function (event) {
+      if (event.keyCode === 13 && $(this).val().trim() !== '') {
+        let message = {
+          sender: currentUser._id,
+          receiver: _id,
+          content: $(this).val().trim(),
+          timestamp: new Date().getTime(),
+        };
+        // event listener for enter key press
+        event.preventDefault();
+        socket.emit('privateMessage', message, function (data) {
+          renderPrivateMessage(
+            $(`#${data.receiver}UL`),
+            data.receiver,
+            'cpright-chat',
+            data.content,
+            data.timestamp
+          );
+
+          $(`#${data.receiver}Txt`).val('').focus();
+
+          scrollBottom2($(`#${data.receiver}UL`));
+        });
+      }
+    });
+  }
+
+  // click on a user
+  divUsers.on('click', 'a', function () {
+    let _id = $(this).data('_id');
+
+    // We can not send private messages to ourselves
+    if (_id === currentUser._id) return;
+
+    //receiver data
+    let receiver = users.filter((user) => user._id === _id)[0];
+
+    if (!popupChats.filter((chat) => chat._id === _id)[0]) {
+      // chats exists?
+      // cloning the template and rendering
+      popupChats.push({
+        _id,
+        chatDiv: $(`#${_id}UL`),
+      });
+      createPrivChat(_id, receiver.username);
+
+      // event listeners for private chat
+      setPrivChatEvListeners(_id);
+    }
   });
 
   // click on send button
@@ -449,7 +595,7 @@ $('document').ready(function () {
         socket.emit('createMessage', postData, function (message) {
           txtSend.val('').focus();
           renderMessage(message, currentUser);
-          scrollBottom();
+          scrollBottom(divChatbox);
           newMsgSend.play();
         });
       },
