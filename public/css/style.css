@@ -1271,7 +1271,7 @@ File: scss
 }
 
 .fix-header .page-wrapper {
-  padding-top: 70px;
+  padding-top: 0px;
 }
 
 .fix-header .right-side-panel {

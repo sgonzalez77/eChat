@@ -54,16 +54,10 @@ $('document').ready(function () {
   let currentUser = {
     room: params.get('room'),
     token: params.get('token'),
-    role: params.get('role'),
-    enabled: params.get('enabled'),
-    google: params.get('google'),
     _id: params.get('_id'),
     username: params.get('username'),
-    email: params.get('email'),
     img: params.get('img'),
   };
-
-  console.log(currentUser);
 
   // ============================================
   // socket.io
@@ -337,22 +331,11 @@ $('document').ready(function () {
     let scrollHeight = el.prop('scrollHeight');
     let newMessageHeight = newMessage.innerHeight();
     let lastMessageHeight = newMessage.prev().innerHeight() || 0;
-    console.log(
-      clientHeight,
-      scrollTop,
-      newMessageHeight,
-      lastMessageHeight,
-      scrollHeight
-    );
+
     if (
       clientHeight + scrollTop + newMessageHeight + lastMessageHeight >=
       scrollHeight
     ) {
-      console.log(
-        el.prop('nodeName'),
-        el.parent().prop('nodeName'),
-        el.children('li:first-child').prop('nodeName')
-      );
       el.scrollTop(scrollHeight);
     }
   }
@@ -372,13 +355,7 @@ $('document').ready(function () {
     let scrollHeight = el.prop('scrollHeight');
     let newMessageHeight = newMessage.innerHeight();
     let lastMessageHeight = newMessage.prev().innerHeight() || 0;
-    console.log(
-      clientHeight,
-      scrollTop,
-      newMessageHeight,
-      lastMessageHeight,
-      scrollHeight
-    );
+
     if (
       clientHeight + scrollTop + newMessageHeight + lastMessageHeight >=
       scrollHeight
@@ -561,6 +538,9 @@ $('document').ready(function () {
         chatDiv: $(`#${_id}UL`),
       });
       createPrivChat(_id, receiver.username);
+
+      // open priv chat window
+      $(`#${_id}`).toggleClass('cpopen-more');
 
       // event listeners for private chat
       setPrivChatEvListeners(_id);

@@ -49,7 +49,7 @@ app.post('/login', (req, res) => {
 
     res.json({
       ok: true,
-      user: userDB,
+      user: { _id: userDB._id, username: userDB.username, img: userDB.img }, // I hide the rest of the fields of a user
       token,
     });
   });

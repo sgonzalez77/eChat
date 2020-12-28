@@ -1,7 +1,7 @@
 .cpmain-section {
   width: 300px;
   position: fixed;
-  right: 90px;
+  right: 100px;
   bottom: -350px;
   transition: 2s;
 }
