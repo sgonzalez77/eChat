@@ -19,6 +19,9 @@
 .cpfirst-section {
   background-color: #82b6f4;
 }
+.cpbackgroundChange {
+  background: rgb(240, 87, 87);
+}
 .cpfirst-section p {
   color: #fff;
   margin: 0px;
@@ -122,6 +125,7 @@
 }
 .cpthird-section {
   border-top: 1px solid #eeeeee;
+  background-color: #fff;
 }
 .cptext-bar {
   background-color: #fff;

@@ -121,30 +121,38 @@ $('document').ready(function () {
     //sender data
     let sender = users.filter((user) => user._id === message.sender)[0];
 
+    // Save reference for better performance
+    let chatDiv = null;
+
     // cloning the template and rendering
     // we keep references to all private chats opened into popupChats
 
     if (!popupChats.filter((chat) => chat._id === message.sender)[0]) {
       // chats exists?
+
       popupChats.push({
         _id: message.sender,
-        chatDiv: $(`#${message.sender}UL`),
+        chatDiv,
       });
       createPrivChat(message.sender, sender.username);
 
       // event listeners for private chat
       setPrivChatEvListeners(message.sender);
+
+      chatDiv = $(`#${message.sender}UL`);
+    } else {
+      chatDiv = $(`#${message.sender}UL`);
     }
 
     renderPrivateMessage(
-      $(`#${message.sender}UL`),
+      chatDiv,
       message.sender,
       'cpleft-chat',
       message.content,
       message.timestamp
     );
 
-    scrollBottom2($(`#${message.sender}UL`));
+    scrollBottom2(chatDiv);
   });
 
   // ============================================
@@ -479,9 +487,10 @@ $('document').ready(function () {
     //pure JS
     const popUpChat = document.createElement('div');
     popUpChat.id = _id;
-    popUpChat.className = 'cpmain-section';
+    popUpChat.className = 'cpmain-section ui-widget-content';
     const popUpTemplate = document.getElementById('popup-chat-template');
     const popUpBody = document.importNode(popUpTemplate.content, true);
+
     popUpBody.querySelector('.fa-minus').id = _id + 'Min'; // minimize button
     popUpBody.querySelector('.fa-times').id = _id + 'Close'; // close button
     popUpBody.querySelector('.fa-paper-plane-o').id = _id + 'Send'; // send button
@@ -491,6 +500,9 @@ $('document').ready(function () {
     popUpBody.querySelector('p').textContent = username; // private chat title
     popUpChat.append(popUpBody);
     document.body.append(popUpChat);
+
+    //jquery
+    $(`#${_id}`).draggable();
   }
 
   // ============================================
@@ -517,7 +529,19 @@ $('document').ready(function () {
   function setPrivChatEvListeners(_id) {
     // event listener for minimize button
     $(`#${_id}Min`).click(function () {
-      $(`#${_id}`).toggleClass('cpopen-more');
+      let myWin = $(`#${_id}`);
+
+      myWin.animate(
+        {
+          top: $(window).height() - $('.cpborder-chat').height() + 'px',
+        },
+        200,
+        function () {
+          //end of animation.. if you want to add some code here
+        }
+      );
+      // originally it worked, but ofter using draggable it fails
+      // $(`#${_id}`).toggleClass('cpopen-more');
     });
 
     // event listener for close button

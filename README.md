@@ -7,16 +7,16 @@ npm install
 node server/server
 ```
 
+Main characteristic:
+
+- Main chat room with messages stored in a database (if you reload the window or of you login again all the messages will be there).
+- Private messages between users (not stored in the databse, so if you reload or relogin eveyrthing will be lost).
+
 TODOs (I wrote them down for me :s)
 
-- [x] Messages stored in the DB
-- Messages encrypted in the database
-- User may login only a single time simultaniously with the same account
-- Pop up for direct messages
-- Implement classes for users in the client
+- Mark windows minimized with unread messages.
 - View for users CRUD
 - Enable Google login
 - Version using MariaDB
 - Version using React
-- Create chat rooms
-- Use socket.io only to notify clients to read a new message from the database, less performance but clearer code
+- Create different chat rooms

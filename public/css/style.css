@@ -2140,6 +2140,8 @@ ul#themecolors li a.working:before {
   right: 0;
   border-top: 1px solid rgba(120, 130, 140, 0.13);
   background: #ffffff;
+  height: 47px;
+  overflow: hidden;
 }
 
 /*******************
