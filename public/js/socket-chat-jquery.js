@@ -169,16 +169,30 @@ $('document').ready(function () {
     let hour = twoDigits(date.getHours());
     let minutes = twoDigits(date.getMinutes());
     let time = `${hour}:${minutes}`;
-    let html = '';
 
-    html += '<li>';
-    html += `<div class="${myclass}">`;
-    html += `  <p>${text}</p>`;
-    html += `  <span>${time}</span>`;
-    html += '</div>';
-    html += '</li>';
+    let li = $('<li/>');
 
-    el.append(html);
+    let divContent = $('<div/>', {
+      class: myclass,
+    }).appendTo(li);
+
+    let pText = $('<p/>', {
+      text: text,
+    }).appendTo(divContent);
+
+    let sTime = $('<span/>', {
+      text: time,
+    }).appendTo(divContent);
+
+    // If we implement it this way the user may be able to execute JS code
+    // html += '<li>';
+    // html += `<div class="${myclass}">`;
+    // html += `  <p>${text}</p>`;
+    // html += `  <span>${time}</span>`;
+    // html += '</div>';
+    // html += '</li>';
+
+    el.append(li);
   }
 
   // Render connected users
@@ -187,6 +201,7 @@ $('document').ready(function () {
     let html = '';
     let img = '';
 
+    //username must be restricted to chars and numbers (and some symbols), JS code maybe be executed otherwise...
     html += '<li>';
     html +=
       '    <a href="javascript:void(0)" class="active"> eChat:<span> ' +
@@ -224,28 +239,80 @@ $('document').ready(function () {
     time,
     me
   ) {
-    var txt = '';
+    let txt = '';
+    let li = null;
     if (me) {
-      txt += '<li class="reverse">';
-      txt += '  <div class="chat-content">';
-      txt += `    <h5>${time} – ${username}</h5>`;
-      txt += `    <div class="chat-img"><img src="${img}" alt="user" /></div>`;
-      txt += '    <div class="box bg-light-inverse">' + msgcontent + '</div>';
-      txt += '  </div>';
+      li = $('<li/>', {
+        class: 'reverse',
+      });
 
-      txt += '</li>';
+      let divContent = $('<div/>', {
+        class: 'chat-content',
+      }).appendTo(li);
+
+      let h5 = $('<h5/>', {
+        text: `${time} – ${username}`,
+      }).appendTo(divContent);
+
+      let divImg = $('<div/>', {
+        class: 'chat-img',
+      }).appendTo(divContent);
+
+      let imgEl = $('<img/>', {
+        alt: 'user',
+        src: img,
+      }).appendTo(divImg);
+
+      let divMsg = $('<div/>', {
+        class: 'box bg-light-inverse',
+        text: msgcontent,
+      }).appendTo(divContent);
+
+      // If we implement it this way the user may be able to execute JS code
+      // txt += '<li class="reverse">';
+      // txt += '  <div class="chat-content">';
+      // txt += `    <h5>${time} – ${username}</h5>`;
+      // txt += `    <div class="chat-img"><img src="${img}" alt="user" /></div>`;
+      // txt += '    <div class="box bg-light-inverse">' + msgcontent + '</div>';
+      // txt += '  </div>';
+
+      // txt += '</li>';
     } else {
-      txt += '<li>';
-      txt += '  <div class="chat-content">';
-      txt += `    <h5>${username} – ${time}</h5>`;
-      txt += `    <div class="chat-img"><img src="${img}" alt="user" /></div>`;
-      txt += '    <div class="box bg-light-danger">' + msgcontent + '</div>';
-      txt += '  </div>';
+      li = $('<li/>', {});
 
-      txt += '</li>';
+      let divContent = $('<div/>', {
+        class: 'chat-content',
+      }).appendTo(li);
+
+      let h5 = $('<h5/>', {
+        text: `${time} – ${username}`,
+      }).appendTo(divContent);
+
+      let divImg = $('<div/>', {
+        class: 'chat-img',
+      }).appendTo(divContent);
+
+      let imgEl = $('<img/>', {
+        alt: 'user',
+        src: img,
+      }).appendTo(divImg);
+
+      let divMsg = $('<div/>', {
+        class: 'box bg-light-danger',
+        text: msgcontent,
+      }).appendTo(divContent);
+      // If we implement it this way the user may be able to execute JS code
+      // txt += '<li>';
+      // txt += '  <div class="chat-content">';
+      // txt += `    <h5>${username} – ${time}</h5>`;
+      // txt += `    <div class="chat-img"><img src="${img}" alt="user" /></div>`;
+      // txt += '    <div class="box bg-light-danger">' + msgcontent + '</div>';
+      // txt += '  </div>';
+
+      // txt += '</li>';
     }
 
-    return txt;
+    return li;
   }
 
   // ir renders a new message appending it to the current messages
@@ -255,7 +322,7 @@ $('document').ready(function () {
     // curUser: {room, token, role, enabled, google, _id, username, email, img}
     // implement using DOM?
 
-    let html = '';
+    let html = null;
 
     //for function htmlSingleMessage
     let class1 = '';
@@ -277,7 +344,7 @@ $('document').ready(function () {
       username = curUser.username;
       msgcontent = message.content;
       img = `/image/user/${curUser.img}?token=${curUser.token}`;
-      html += htmlSingleMessage(
+      html = htmlSingleMessage(
         class1,
         class2,
         username,
@@ -297,7 +364,7 @@ $('document').ready(function () {
 
       img = `/image/user/${foundUser.img}?token=${curUser.token}`;
 
-      html += htmlSingleMessage(
+      html = htmlSingleMessage(
         class1,
         class2,
         username,
@@ -539,11 +606,11 @@ $('document').ready(function () {
       });
       createPrivChat(_id, receiver.username);
 
-      // open priv chat window
-      $(`#${_id}`).toggleClass('cpopen-more');
-
       // event listeners for private chat
       setPrivChatEvListeners(_id);
+
+      // open priv chat window
+      $(`#${_id}`).toggleClass('cpopen-more');
     }
   });
 
