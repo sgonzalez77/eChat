@@ -14,10 +14,22 @@ io.on('connection', (client) => {
   client.on('loginChat', (userConnected, callback) => {
     //all the data inside the database of the user in the database
     //arrives here, but we don't have the client id of the socket
-    if (!userConnected.username || !userConnected.room) {
-      return callback({
+    if (
+      !userConnected.username ||
+      !userConnected.room ||
+      !userConnected._id ||
+      !userConnected.token
+    ) {
+      return callback(null, {
         error: true,
-        mensaje: 'A chat room is mandatory',
+        message: 'Wrong parameters',
+      });
+    }
+
+    if (users.getUserBy_id(userConnected._id)) {
+      return callback(null, {
+        error: true,
+        message: `User '${userConnected.username}' already logged in`,
       });
     }
 
@@ -52,7 +64,7 @@ io.on('connection', (client) => {
         )
       );
 
-    callback(users.getUsersPerRoom(userConnected.room));
+    callback(users.getUsersPerRoom(userConnected.room), null);
   });
 
   client.on('createMessage', (data, callback) => {
@@ -68,21 +80,22 @@ io.on('connection', (client) => {
 
   client.on('disconnect', () => {
     let removedUser = users.removeUser(client.id);
+    if (removedUser) {
+      client.broadcast
+        .to(removedUser.room)
+        .emit(
+          'createMessage',
+          createMessage(
+            removedUser._id,
+            removedUser.room,
+            `${removedUser.username} exits the chat`
+          )
+        );
 
-    client.broadcast
-      .to(removedUser.room)
-      .emit(
-        'createMessage',
-        createMessage(
-          removedUser._id,
-          removedUser.room,
-          `${removedUser.username} exits the chat`
-        )
-      );
-
-    client.broadcast
-      .to(removedUser.room)
-      .emit('userList', users.getUsersPerRoom(removedUser.room));
+      client.broadcast
+        .to(removedUser.room)
+        .emit('userList', users.getUsersPerRoom(removedUser.room));
+    }
   });
 
   // Private messages (between two users)

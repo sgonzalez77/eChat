@@ -14,9 +14,9 @@ Main characteristic:
 
 TODOs (I wrote them down for me :s)
 
-- Mark windows minimized with unread messages.
-- View for users CRUD
-- Enable Google login
-- Version using MariaDB
-- Version using React
-- Create different chat rooms
+- Mark minimized windows with unread messages.
+- View for users' CRUD.
+- Enable Google login.
+- Version using MariaDB.
+- Version using React.
+- Create different chat rooms.

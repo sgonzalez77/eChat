@@ -2,9 +2,10 @@ $('document').ready(function () {
   let preloader = $('.preloader');
   let errorModal = $('#error-modal');
   let errorHint = $('#error-hint');
+  let params = new URLSearchParams(window.location.search);
 
   // Sounds
-  var errorSound = $('#error-sound')[0];
+  let errorSound = $('#error-sound')[0];
 
   preloader.fadeOut();
 
@@ -72,4 +73,11 @@ $('document').ready(function () {
 
     // return false;
   });
+  console.log(params.get('ok'));
+  if (params.get('ok') === 'false') {
+    console.log('entro');
+    errorHint.html('<h4>Error!</h4>' + params.get('err'));
+    errorModal.modal('toggle');
+    errorSound.play();
+  }
 });

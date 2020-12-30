@@ -41,15 +41,18 @@ $('document').ready(function () {
   // params: room, token, role, enabled, google, _id, username, email, img
   let params = new URLSearchParams(window.location.search);
 
-  if (!params.has('username') || !params.has('room') || !params.has('token')) {
-    window.location = 'index.html';
-    throw new Error('There was an error validating the user');
-  } else {
-    //??
-    //validate token, every time the page is loaded we must validate it
-    //working with the database we will validate de user connection
-    //(loading messages from de data base)
-  }
+  // if (!params.has('username') || !params.has('room') || !params.has('token')) {
+  //   let destination = '/index.html';
+  //   window.location.href =
+  //     destination +
+  //     '?ok=false,err=' +
+  //     encodeURIComponent('There was an error validating the user');
+  // } else {
+  //   //??
+  //   //validate token, every time the page is loaded we must validate it
+  //   //working with the database we will validate the user connection
+  //   //(loading messages from de data base)
+  // }
 
   let currentUser = {
     room: params.get('room'),
@@ -69,21 +72,31 @@ $('document').ready(function () {
 
     hiSound.play();
 
-    socket.emit('loginChat', currentUser, function (usersConnected) {
-      chatRoomName.text(`'${currentUser.room}'`);
-      //adding id (socket) to currentUser
-      currentUser.id = usersConnected.filter(
-        (user) => user._id === currentUser._id
-      )[0].id;
+    socket.emit('loginChat', currentUser, function (usersConnected, err) {
+      if (!usersConnected) {
+        let destination = '/index.html';
+        let error = 'An error ocurred. Try again.';
+        if (err) {
+          error = err.message;
+        }
+        window.location.href =
+          destination + '?ok=false&err=' + encodeURIComponent(error);
+      } else {
+        chatRoomName.text(`'${currentUser.room}'`);
+        //adding id (socket) to currentUser
+        currentUser.id = usersConnected.filter(
+          (user) => user._id === currentUser._id
+        )[0].id;
 
-      //I keep users in a global variable
-      users = usersConnected;
+        //I keep users in a global variable
+        users = usersConnected;
 
-      //on chat login, load users
-      renderUsers(usersConnected);
+        //on chat login, load users
+        renderUsers(usersConnected);
 
-      //on chat login, fist load all users' data and all messages
-      loadAllUsers();
+        //on chat login, fist load all users' data and all messages
+        loadAllUsers();
+      }
     });
   });
 
