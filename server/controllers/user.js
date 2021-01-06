@@ -21,7 +21,6 @@ const MAXUSERS = 100;
 const {
   verifyToken,
   verifyAdminRole,
-  verifyTokenImg,
 } = require('../middlewares/authentication');
 
 const app = express();

@@ -17,6 +17,11 @@ let messageSchema = new Schema({
     type: String,
     required: [true, 'A content for the message is required'],
   },
+  iv: {
+    // Mandatory for encryption with crypto
+    type: String,
+    required: [true, 'Mandatory field'],
+  },
   timestamp: {
     type: Number, //Decimal128
     required: [true, 'A message must have a timestamp'],

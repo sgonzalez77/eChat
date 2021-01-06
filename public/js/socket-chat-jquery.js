@@ -541,20 +541,40 @@ $('document').ready(function () {
 
   function setPrivChatEvListeners(_id) {
     // event listener for minimize button
+
+    // originally it was implemented with a css class and the mothod toggle,
+    //but after using draggable it fails
     $(`#${_id}Min`).click(function () {
       let myWin = $(`#${_id}`);
+      let wHeight = $(window).height();
+      let bHeight = $('.cpborder-chat').height();
+      let privateHeight = 0; // private window height
 
-      myWin.animate(
-        {
-          top: $(window).height() - $('.cpborder-chat').height() + 'px',
-        },
-        200,
-        function () {
-          //end of animation.. if you want to add some code here
-        }
-      );
-      // originally it worked, but ofter using draggable it fails
-      // $(`#${_id}`).toggleClass('cpopen-more');
+      $('.cpborder-chat').each(function () {
+        privateHeight += $(this).outerHeight();
+      });
+
+      if ($(`#${_id}`).position().top < wHeight - bHeight) {
+        myWin.animate(
+          {
+            top: $(window).height() - $('.cpborder-chat').height() + 'px',
+          },
+          200,
+          function () {
+            //end of animation.. if you want to add some code here
+          }
+        );
+      } else {
+        myWin.animate(
+          {
+            top: $(window).height() - privateHeight + 'px',
+          },
+          200,
+          function () {
+            //end of animation.. if you want to add some code here
+          }
+        );
+      }
     });
 
     // event listener for close button

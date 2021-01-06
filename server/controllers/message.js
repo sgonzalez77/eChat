@@ -9,6 +9,8 @@ const Message = require('../models/message');
 // Importing middleware
 const { verifyToken } = require('../middlewares/authentication');
 
+const { encrypt, decrypt } = require('../utils/crypto');
+
 const app = express();
 
 const bodyParser = require('body-parser');
@@ -28,7 +30,7 @@ app.get('/messages/:receiver', verifyToken, (req, res) => {
   let receiver = req.params.receiver;
 
   let condition = { receiver };
-  let keys = 'sender receiver content timestamp'; //selected keys of the documents
+  let keys = 'sender receiver content iv timestamp'; //selected keys of the documents
   Message.find(condition, keys)
     // .skip(from)
     // .limit(limit)
@@ -39,6 +41,16 @@ app.get('/messages/:receiver', verifyToken, (req, res) => {
           err,
         });
       }
+
+      // for (let msg in messagesDB) {
+      //   console.log(msg.toString());
+      // }
+
+      messagesDB.forEach((el) => {
+        el.content = decrypt({ content: el.content, iv: el.iv });
+        el.set('iv', null);
+      });
+
       Message.countDocuments(condition, (err, numDocs) => {
         res.json({
           ok: true,
@@ -51,12 +63,14 @@ app.get('/messages/:receiver', verifyToken, (req, res) => {
 
 app.post('/message', verifyToken, function (req, res) {
   let body = req.body;
+  let encryptedContent = encrypt(body.content);
 
   let message = new Message({
     sender: body.sender,
     receiver: body.receiver,
     room: body.room,
-    content: body.content,
+    content: encryptedContent.content,
+    iv: encryptedContent.iv,
     timestamp: body.timestamp,
   });
 
