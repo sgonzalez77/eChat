@@ -526,7 +526,10 @@ $('document').ready(function () {
   errorModal.click(function () {
     errorModal.modal('toggle');
     let destination = '/index.html';
-    window.location.href = destination + '?ok=false';
+    window.location.href =
+      destination +
+      '?ok=false&err=' +
+      encodeURIComponent('Your session expired!');
   });
 
   // set an event listener for keys if the error modal is show
