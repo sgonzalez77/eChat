@@ -2,7 +2,8 @@ Based on UDEMY's course "Node de cero a experto" by Fernando Herrera. Users crea
 
 - Template Name: Admin Pro Admin
 - Author: Wrappixel
-  This template was given to students in the course listed above.
+
+This template was given to students in the course listed above.
 
 To run it locally:
 
@@ -17,10 +18,11 @@ Deployed to Heroku:
 
 Main characteristic:
 
-- Main chat room with messages stored in a database (if you reload the window or if you log in again, all messages will be there). But in the main room there will be messages stored with a total of 1024 bytes (it is ephemeral!).
+- Main chat room with messages stored in a database (if you reload the window or if you log in again, all messages will be there). But in the main room there will be messages stored with a total of 1024 bytes (it is ephimeral!).
 - Messages are encrypted inside the database (and decrypted to show them in the main chat room).
 - Users' password are hashed (encrypted with no way to decrypt them).
 - Private messages between users (not stored in the databse, so if you reload or relogin eveyrthing will be lost).
+- User pictures doenloaded using authentication with token.
 
 Specifications:
 

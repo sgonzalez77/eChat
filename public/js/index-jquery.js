@@ -75,9 +75,21 @@ $('document').ready(function () {
   });
   console.log(params.get('ok'));
   if (params.get('ok') === 'false') {
-    console.log('entro');
     errorHint.html('<h4>Error!</h4>' + params.get('err'));
     errorModal.modal('toggle');
     errorSound.play();
+  } else {
+    errorHint.html(
+      '<h4>Warning!</h4>' +
+        'I am Sergio González and you can use this ' +
+        'chat ONLY if you are one of my students. ' +
+        'The main goal of this project is to show my students the ' +
+        'importance of a database within a web project. ' +
+        'Messages can be stored in a database, so YOU ARE ' +
+        'NOT ALLOWED TO USE THIS WEBSITE TO COMMUNICATE. As I ' +
+        'told you, this is a project for ACADEMIC PURPOSES ONLY. ' +
+        'For more information visit: https://github.com/sgonzalez77/eChat'
+    );
+    errorModal.modal('toggle');
   }
 });
