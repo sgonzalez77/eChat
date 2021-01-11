@@ -525,6 +525,8 @@ $('document').ready(function () {
   // hide error modal on click
   errorModal.click(function () {
     errorModal.modal('toggle');
+    let destination = '/index.html';
+    window.location.href = destination + '?ok=false';
   });
 
   // set an event listener for keys if the error modal is show
